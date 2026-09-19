@@ -12,5 +12,5 @@ A small Python script that finds the class average, topper, and who needs improv
 - Python
 - VS Code
 
----
+--- 
 *Every expert was once a beginner. 🌱*

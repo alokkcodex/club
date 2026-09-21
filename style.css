@@ -1,0 +1,212 @@
+/* ---------- 1. Variables ----------
+   Custom properties let you change the whole theme from one place.
+   Try changing --amber or --ink and refresh the page! */
+:root {
+  --ink: #14213d;        /* dark blue: left panel, text */
+  --ink-soft: #3b4a6b;   /* softer blue: secondary text */
+  --sheet: #f4f6fa;      /* page background on the right */
+  --white: #ffffff;
+  --amber: #ffb627;      /* button colour */
+  --amber-dark: #e59f0f; /* button hover */
+  --line: #d5dbe6;       /* input borders */
+  --radius: 10px;
+}
+
+/* ---------- 2. Reset ----------
+   border-box makes width include padding and border,
+   which keeps sizing predictable. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--sheet);
+  line-height: 1.5;
+}
+
+/* ---------- 3. Layout (CSS Grid) ----------
+   Two equal columns: intro on the left, form on the right. */
+.login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ---------- 4. Left panel ----------
+   The grid-paper look is two gradients layered on top of each other:
+   one draws horizontal lines, the other draws vertical lines. */
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* brand at top, text at bottom */
+  padding: 48px;
+  color: var(--white);
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.intro h1 {
+  margin: 0 0 16px;
+  max-width: 12ch;
+  font-size: clamp(2.2rem, 5vw, 3.6rem); /* scales with screen width */
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.intro-copy p {
+  margin: 0;
+  max-width: 36ch;
+  color: #c5cee0;
+}
+
+/* ---------- 5. Right panel (the form) ---------- */
+.panel {
+  display: grid;
+  place-items: center; /* centres the form both ways */
+  padding: 32px;
+}
+
+.form {
+  width: 100%;
+  max-width: 380px;
+}
+
+.form h2 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.hint {
+  margin: 0 0 32px;
+  color: var(--ink-soft);
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* Visible focus ring so keyboard users know where they are */
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 33, 61, 0.15);
+}
+
+/* ---------- 6. Remember me + forgot password ---------- */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.remember input {
+  accent-color: var(--ink); /* colours the checkbox */
+}
+
+a {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+a:hover {
+  color: var(--ink-soft);
+}
+
+/* ---------- 7. Button ---------- */
+.btn {
+  width: 100%;
+  padding: 14px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--amber);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn:hover {
+  background: var(--amber-dark);
+}
+
+.btn:active {
+  transform: translateY(1px); /* tiny "press" effect */
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.signup {
+  margin: 24px 0 0;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+/* ---------- 8. Responsive ----------
+   On screens 800px wide or less, stack the panels vertically. */
+@media (max-width: 800px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    padding: 32px 24px;
+    gap: 40px;
+  }
+
+  .intro h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* Respect users who turn off animations in their system settings */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

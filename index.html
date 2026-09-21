@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes the page scale properly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in – login page... </title>
+
+  <!-- Google Font (falls back to system-ui if offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+
+  <!-- Link to our CSS file (keep it in the same folder) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="login">
+
+    <!-- LEFT: the intro panel with the grid-paper background -->
+    <section class="intro">
+      <p class="brand">Fieldnotes</p>
+
+      <div class="intro-copy">
+        <h1></h1>
+        <p></p>
+      </div>
+    </section>
+
+    <!-- RIGHT: the login form -->
+    <section class="panel">
+      <form class="form" action="#" method="post">
+        <h2>Log in</h2>
+        <p class="hint">Welcome back. Enter your details to continue.</p>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email"
+                 placeholder="you@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password"
+                 placeholder="At least 8 characters" autocomplete="current-password"
+                 minlength="8" required>
+        </div>
+
+        <div class="row">
+          <label class="remember">
+            <input type="checkbox" name="remember">
+            Keep me logged in
+          </label>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn">Log in</button>
+
+        <p class="signup">New to Fieldnotes? <a href="#">Create an account</a></p>
+      </form>
+    </section>
+
+  </main>
+
+</body>
+</html>

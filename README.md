@@ -8,9 +8,9 @@ This repo has my first steps in coding — starting simple, and building toward 
 A small Python script that finds the class average, topper, and who needs improvement — using a sample dataset of student marks.
 
 ## 🛠️ Tools I'm Learning
-- Git & GitHub
+- Git & GitHub 
 - Python
 - VS Code
 
----
+--- 
 *Every expert was once a beginner. 🌱*

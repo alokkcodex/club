@@ -1,67 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <!-- Makes the page scale properly on phones -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log in – login page... </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alok | Portfolio</title>
+<style>
+  :root{
+    --bg:#FAFAF7; --text:#1B2140; --muted:#5B617D; --card:#FFFFFF;
+    --indigo:#1E2B6B; --gold:#F2B632; --red:#B23A2E; --line:#E4E2D8;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1633; --text:#F1F0E8; --muted:#A9AECB; --card:#18204A;
+    --indigo:#F2B632; --gold:#F2B632; --red:#E8705F; --line:#2B3568;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Trebuchet MS",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s}
+  a{color:inherit}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px}
 
-  <!-- Google Font (falls back to system-ui if offline) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+  /* Madhubani-style border strip */
+  .strip{height:14px;background:
+    repeating-linear-gradient(90deg,var(--red) 0 14px,var(--gold) 14px 28px,var(--indigo) 28px 42px,transparent 42px 56px)}
 
-  <!-- Link to our CSS file (keep it in the same folder) -->
-  <link rel="stylesheet" href="style.css">
+  header{position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;max-width:900px;margin:0 auto}
+  .logo{font-weight:bold;font-size:1.2rem;text-decoration:none}
+  .links{display:flex;gap:18px;align-items:center;list-style:none}
+  .links a{text-decoration:none;color:var(--muted)}
+  .links a:hover{color:var(--red)}
+  button{font:inherit;cursor:pointer}
+  .icon-btn{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px}
+  #menuBtn{display:none}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+  section{padding:64px 0}
+  h1{font-size:clamp(2.2rem,7vw,3.6rem);line-height:1.1;margin-bottom:12px}
+  h2{font-size:1.8rem;margin-bottom:20px;display:inline-block;border-bottom:4px solid var(--gold)}
+  .typing{font-size:1.3rem;color:var(--red);min-height:2em;font-weight:bold}
+  .cursor{border-right:2px solid var(--red);margin-left:2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{border-color:transparent}}
+  .hero p{max-width:55ch;color:var(--muted);margin:12px 0 24px}
+  .btn{display:inline-block;background:var(--indigo);color:var(--bg);padding:10px 20px;border-radius:8px;text-decoration:none;border:0;transition:transform .2s}
+  .btn:hover{transform:translateY(-3px)}
+  .btn.alt{background:none;color:var(--text);border:2px solid var(--indigo);margin-left:8px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--gold);padding:18px;border-radius:6px;transition:transform .2s}
+  .card:hover{transform:translateY(-4px)}
+  .card h3{margin-bottom:6px}
+  .card p{color:var(--muted);font-size:.95rem}
+  .repo{display:inline-block;margin-top:10px;color:var(--red);font-weight:bold}
+  .tag{display:inline-block;font-size:.8rem;border:1px solid var(--line);border-radius:20px;padding:2px 10px;margin:8px 6px 0 0;color:var(--muted)}
+
+  .skill{margin-bottom:14px}
+  .bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .bar span{display:block;height:100%;width:0;background:var(--red);transition:width 1s}
+
+  form{display:grid;gap:12px;max-width:480px}
+  input,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--text);font:inherit}
+  #msg{min-height:1.5em;font-weight:bold}
+  footer{text-align:center;padding:24px;color:var(--muted);font-size:.9rem}
+
+  @media(max-width:600px){
+    #menuBtn{display:inline-block}
+    .links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--bg);padding:16px 20px;border-bottom:1px solid var(--line)}
+    .links.open{display:flex}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 
-  <main class="login">
+<div class="strip"></div>
+<header>
+  <nav>
+    <a class="logo" href="#home">Alok</a>
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">Menu</button>
+    <ul class="links" id="links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><button class="icon-btn" id="themeBtn" aria-label="Switch dark or light mode">Dark</button></li>
+    </ul>
+  </nav>
+</header>
 
-    <!-- LEFT: the intro panel with the grid-paper background -->
-    <section class="intro">
-      <p class="brand">Fieldnotes</p>
+<main class="wrap">
+  <section id="home" class="hero">
+    <h1>Hi, I'm Alok.</h1>
+    <div class="typing"><span id="typed"></span><span class="cursor"></span></div>
+    <p>BTech CSE student at VGI, Greater Noida. I like turning data into answers and building small web projects.</p>
+    <a class="btn" href="#projects">See my projects</a>
+    <a class="btn alt" href="#contact">Contact me</a>
+  </section>
 
-      <div class="intro-copy">
-        <h1></h1>
-        <p></p>
+  <section id="about">
+    <h2>About me</h2>
+    <p>I'm from Madhubani, Bihar, now studying Computer Science at VGI on a scholarship. My goal is to become a Data Analyst, and I'm learning AI, data science, ML and web development along the way.</p>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <!-- Change the numbers to match your real level -->
+    <div class="skill"><label>HTML</label><div class="bar"><span data-w="70"></span></div></div>
+    <div class="skill"><label>CSS</label><div class="bar"><span data-w="60"></span></div></div>
+    <div class="skill"><label>JavaScript</label><div class="bar"><span data-w="35"></span></div></div>
+    <div class="skill"><label>Python</label><div class="bar"><span data-w="45"></span></div></div>
+    <div class="skill"><label>C</label><div class="bar"><span data-w="40"></span></div></div>
+    <div class="skill"><label>Data analysis (learning)</label><div class="bar"><span data-w="30"></span></div></div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Sales Data Analyzer</h3>
+        <p>A Python data analysis project that explores sales data to find useful insights.</p>
+        <span class="tag">Python</span><br>
+        <a class="repo" href="https://github.com/alokkcodex/sales-data-analyzer" target="_blank" rel="noopener">View on GitHub</a>
       </div>
-    </section>
+      <div class="card">
+        <h3>Library Management System</h3>
+        <p>A program written in C to manage a library's books and records.</p>
+        <span class="tag">C</span><br>
+        <a class="repo" href="https://github.com/alokkcodex/Library-Management-System" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <div class="card">
+        <h3>Globalmonitor</h3>
+        <p>A real-time global dashboard project built with TypeScript.</p>
+        <span class="tag">TypeScript</span><br>
+        <a class="repo" href="https://github.com/alokkcodex/Globalmonitor" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <div class="card">
+        <h3>Club Website</h3>
+        <p>A club page styled with CSS.</p>
+        <span class="tag">CSS</span><br>
+        <a class="repo" href="https://github.com/alokkcodex/club" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- RIGHT: the login form -->
-    <section class="panel">
-      <form class="form" action="#" method="post">
-        <h2>Log in</h2>
-        <p class="hint">Welcome back. Enter your details to continue.</p>
+  <section id="contact">
+    <h2>Contact</h2>
+    <form id="form" novalidate>
+      <input id="name" placeholder="Your name" aria-label="Your name">
+      <input id="email" type="email" placeholder="Your email" aria-label="Your email">
+      <textarea id="text" rows="4" placeholder="Your message" aria-label="Your message"></textarea>
+      <button class="btn" type="submit">Send message</button>
+      <div id="msg" role="status"></div>
+    </form>
+  </section>
+</main>
 
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email"
-                 placeholder="you@example.com" autocomplete="email" required>
-        </div>
+<div class="strip"></div>
+<footer>Made by Alok. Built with HTML, CSS and JavaScript.</footer>
 
-        <div class="field">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password"
-                 placeholder="At least 8 characters" autocomplete="current-password"
-                 minlength="8" required>
-        </div>
+<script>
+  // 1. Dark / light mode
+  const root = document.documentElement;
+  const themeBtn = document.getElementById("themeBtn");
+  themeBtn.addEventListener("click", () => {
+    const dark = root.dataset.theme === "dark";
+    root.dataset.theme = dark ? "light" : "dark";
+    themeBtn.textContent = dark ? "Dark" : "Light";
+  });
 
-        <div class="row">
-          <label class="remember">
-            <input type="checkbox" name="remember">
-            Keep me logged in
-          </label>
-          <a href="#">Forgot password?</a>
-        </div>
+  // 2. Mobile menu
+  const links = document.getElementById("links");
+  document.getElementById("menuBtn").addEventListener("click", () => links.classList.toggle("open"));
+  links.addEventListener("click", e => { if (e.target.tagName === "A") links.classList.remove("open"); });
 
-        <button type="submit" class="btn">Log in</button>
+  // 3. Typing effect (change the words to your own)
+  const words = ["Aspiring Data Analyst", "Web Developer in the making", "Always learning"];
+  const typed = document.getElementById("typed");
+  let w = 0, i = 0, deleting = false;
+  function type() {
+    const word = words[w];
+    typed.textContent = word.slice(0, i);
+    if (!deleting && i < word.length) i++;
+    else if (!deleting) { deleting = true; setTimeout(type, 1200); return; }
+    else if (i > 0) i--;
+    else { deleting = false; w = (w + 1) % words.length; }
+    setTimeout(type, deleting ? 40 : 90);
+  }
+  type();
 
-        <p class="signup">New to Fieldnotes? <a href="#">Create an account</a></p>
-      </form>
-    </section>
+  // 4. Skill bars fill when visible
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.style.width = en.target.dataset.w + "%"; obs.unobserve(en.target); }
+    });
+  });
+  document.querySelectorAll(".bar span").forEach(s => obs.observe(s));
 
-  </main>
-
+  // 5. Contact form check
+  document.getElementById("form").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const text = document.getElementById("text").value.trim();
+    const msg = document.getElementById("msg");
+    if (!name || !text) { msg.textContent = "Please enter your name and a message."; msg.style.color = "var(--red)"; return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = "Please enter a valid email address."; msg.style.color = "var(--red)"; return; }
+    msg.textContent = "Thanks, " + name + "! Your message is ready to send.";
+    msg.style.color = "var(--text)";
+    e.target.reset();
+  });
+</script>
 </body>
 </html>

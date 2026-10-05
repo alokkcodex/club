@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Calculator</title>
+<style>
+  /* ---------- CSS: look and feel ---------- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e2a4a;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+  }
+
+  .calculator {
+    width: 320px;
+    padding: 20px;
+    background: #2b3a67;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .display {
+    background: #121a33;
+    color: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+    text-align: right;
+    min-height: 90px;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+  .history { color: #8f9bc4; font-size: 16px; min-height: 22px; }
+  .current { font-size: 38px; margin-top: 8px; }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  button {
+    height: 62px;
+    border: none;
+    border-radius: 14px;
+    font-size: 22px;
+    cursor: pointer;
+    background: #3d4f8a;
+    color: #fff;
+    transition: transform 0.1s, background 0.2s;
+  }
+  button:hover { background: #4f64ac; }
+  button:active { transform: scale(0.94); }
+  button:focus-visible { outline: 3px solid #ffd166; }
+
+  .op { background: #ff9f43; color: #1e2a4a; font-weight: bold; }
+  .op:hover { background: #ffb36b; }
+  .clear { background: #e94f64; }
+  .clear:hover { background: #f06b7d; }
+  .equals { background: #2ec4b6; color: #10213a; font-weight: bold; }
+  .equals:hover { background: #55d6ca; }
+  .zero { grid-column: span 2; }
+</style>
+</head>
+<body>
+
+<!-- ---------- HTML: the structure ---------- -->
+<div class="calculator">
+  <div class="display">
+    <div class="history" id="history"></div>
+    <div class="current" id="current">0</div>
+  </div>
+
+  <div class="buttons">
+    <button class="clear" onclick="clearAll()">C</button>
+    <button onclick="backspace()">⌫</button>
+    <button class="op" onclick="chooseOperator('/')">÷</button>
+    <button class="op" onclick="chooseOperator('*')">×</button>
+
+    <button onclick="addNumber('7')">7</button>
+    <button onclick="addNumber('8')">8</button>
+    <button onclick="addNumber('9')">9</button>
+    <button class="op" onclick="chooseOperator('-')">−</button>
+
+    <button onclick="addNumber('4')">4</button>
+    <button onclick="addNumber('5')">5</button>
+    <button onclick="addNumber('6')">6</button>
+    <button class="op" onclick="chooseOperator('+')">+</button>
+
+    <button onclick="addNumber('1')">1</button>
+    <button onclick="addNumber('2')">2</button>
+    <button onclick="addNumber('3')">3</button>
+    <button class="equals" onclick="calculate()" style="grid-row: span 2; height: auto;">=</button>
+
+    <button class="zero" onclick="addNumber('0')">0</button>
+    <button onclick="addNumber('.')">.</button>
+  </div>
+</div>
+
+<!-- ---------- JavaScript: the logic ---------- -->
+<script>
+  let current = "0";      // number being typed
+  let previous = "";      // number typed before the operator
+  let operator = null;    // + - * /
+  let justCalculated = false;
+
+  const currentEl = document.getElementById("current");
+  const historyEl = document.getElementById("history");
+  const symbols = { "+": "+", "-": "−", "*": "×", "/": "÷" };
+
+  function updateDisplay() {
+    currentEl.textContent = current;
+    historyEl.textContent = operator ? previous + " " + symbols[operator] : "";
+  }
+
+  function addNumber(num) {
+    if (justCalculated) { current = "0"; justCalculated = false; }
+    if (num === "." && current.includes(".")) return;   // only one dot
+    current = (current === "0" && num !== ".") ? num : current + num;
+    updateDisplay();
+  }
+
+  function chooseOperator(op) {
+    if (operator && !justCalculated && current !== "") calculate(true);
+    previous = current;
+    operator = op;
+    current = "0";
+    justCalculated = false;
+    updateDisplay();
+  }
+
+  function calculate(keepOperator) {
+    if (!operator) return;
+    const a = parseFloat(previous);
+    const b = parseFloat(current);
+    let result;
+
+    if (operator === "+") result = a + b;
+    if (operator === "-") result = a - b;
+    if (operator === "*") result = a * b;
+    if (operator === "/") {
+      if (b === 0) {                       // can't divide by zero
+        clearAll();
+        currentEl.textContent = "Can't divide by 0";
+        return;
+      }
+      result = a / b;
+    }
+
+    result = Math.round(result * 1e10) / 1e10;   // avoid 0.1+0.2 problem
+    current = String(result);
+    previous = "";
+    operator = null;
+    justCalculated = true;
+    updateDisplay();
+  }
+
+  function clearAll() {
+    current = "0";
+    previous = "";
+    operator = null;
+    justCalculated = false;
+    updateDisplay();
+  }
+
+  function backspace() {
+    if (justCalculated) return;
+    current = current.length > 1 ? current.slice(0, -1) : "0";
+    updateDisplay();
+  }
+
+  // Bonus: keyboard support
+  document.addEventListener("keydown", (e) => {
+    if (e.key >= "0" && e.key <= "9" || e.key === ".") addNumber(e.key);
+    else if ("+-*/".includes(e.key)) chooseOperator(e.key);
+    else if (e.key === "Enter" || e.key === "=") calculate();
+    else if (e.key === "Backspace") backspace();
+    else if (e.key === "Escape") clearAll();
+  });
+</script>
+</body>
+</html>
